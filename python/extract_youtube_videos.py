@@ -58,10 +58,11 @@ class ExtractYouTubeVideos:
                 })
         return videos
     
-    def create_csv(self, output_file_name : str, return_df : bool = False, max_results : int = 50):
+    def create_csv(self, output_file_name : str, return_df : bool = False,  save_df : bool = False, max_results : int = 50):
         videos_details = self.get_video_details_list(max_results)
         df = pd.DataFrame(videos_details)
-        df[:max_results].to_csv(f"{output_file_name}.csv", index=False, index_label=False)
+        if save_df:
+            df[:max_results].to_csv(f"{output_file_name}.csv", index=False, index_label=False)
         if return_df:
             return df
 
