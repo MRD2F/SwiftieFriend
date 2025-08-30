@@ -36,6 +36,13 @@ def drop_duplicates_with_description(df_ : pd.DataFrame) -> pd.DataFrame:
     df.drop(index=indexes_to_drop, inplace=True)
     return df
 
+def create_mv_flags(df : pd.DataFrame) -> pd.DataFrame:
+    # df["title"].apply(lambda x: ("official" in x.lower() and "video" in x.lower()))
+    df["official_mv"] = df["title"].astype(str).str.lower().str.contains(r"official.*video")
+    df["behind_scenes_mv"] = df["title"].astype(str).str.lower().str.contains(r"behind.*scenes")
+    return df
+
+
 def clean_yt_data(df_ : pd.DataFrame) -> pd.DataFrame:
     df = df_.copy()
     # Replace NaN, empty strings, or "NULL" (case-insensitive) with "None"
@@ -47,6 +54,9 @@ def clean_yt_data(df_ : pd.DataFrame) -> pd.DataFrame:
     df = df.fillna("None").astype(str)
     df = df.astype(str)
     df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
+
+    #Added MV flags (offial music video, behind the scenes)
+    df = create_mv_flags(df)
 
     # Replace string "None" with real NaN
     df["published"] = df["published"].replace("None", np.nan)
@@ -83,7 +93,7 @@ def clean_yt_data(df_ : pd.DataFrame) -> pd.DataFrame:
 #EXAMPLE
 
 user_name = "TaylorSwift"
-max_videos=50
+max_videos=10
 output_path = "../data/yt_musics_videos/"
 output_file_name = f"youtube_taylor_last_{max_videos}_mv"
 save_df = True
