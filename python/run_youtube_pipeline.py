@@ -1,7 +1,9 @@
 from extract_youtube_videos import ExtractYouTubeVideos
+from load_youtube_videos_info import LoadToBigQuery
+from google.cloud import bigquery
+
 import numpy as np
 import pandas as pd
-
 
 def extract_pipeline(user_name : str, max_results : int = 50) -> list[dict]: #, output_path : str, output_file_name : str,):
     extract_yt_data = ExtractYouTubeVideos(user_name)
@@ -78,6 +80,14 @@ def clean_yt_data(df_ : pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def load_to_bigquery(project_id, dataset_id, table_id, input_path, input_file_name,schema, add_new_records=True):
+    load_bq = LoadToBigQuery(project_id, dataset_id, schema, None)
+    if add_new_records:
+        job = load_bq.add_records_to_table(table_id, input_path, input_file_name)
+    else:
+        job = load_bq.load_table_from_file_csv(table_id, input_path, input_file_name)
+    return job
+
 
 # def save_yt_data(user_name : str, output_path : str, output_file_name : str, max_videos : int = 50):
 #     output_file_path=f"{output_path}{output_file_name}"
@@ -90,18 +100,44 @@ def clean_yt_data(df_ : pd.DataFrame) -> pd.DataFrame:
 #     print(df)
 
 
-#EXAMPLE
+if __name__ == "__main__":
 
-user_name = "TaylorSwift"
-max_videos=10
-output_path = "../data/yt_musics_videos/"
-output_file_name = f"youtube_taylor_last_{max_videos}_mv"
-save_df = True
+    user_name = "TaylorSwift"
+    max_videos=10
+    output_path = "../data/yt_musics_videos/"
+    output_file_name = f"youtube_taylor_last_{max_videos}_mv"
+    save_df = True
+
+    df = save_yt_data(user_name, output_path, output_file_name, save_df, max_videos)
+    print(df)
+
+    project_id = "swiftie-friend" 
+    dataset_id = "social_media"
+    table_id= "youtube_music_videos_v5"
+
+    input_path=output_path
+    input_file_name=output_file_name
+    # input_path="../data/yt_musics_videos/"
+    # input_file_name="youtube_taylor_last_10_mv"
+
+
+    schema = [
+        bigquery.SchemaField("etag", "STRING"),
+        bigquery.SchemaField("id", "STRING"),
+        bigquery.SchemaField("title", "STRING"),
+        bigquery.SchemaField("published", "TIMESTAMP"),
+        bigquery.SchemaField("description", "STRING"),
+        bigquery.SchemaField("link", "STRING"),
+        bigquery.SchemaField("thumbnails", "STRING"),
+        bigquery.SchemaField("official_mv", "BOOLEAN"),
+        bigquery.SchemaField("behind_scenes_mv", "BOOLEAN")
+    ]
+
+    job = load_to_bigquery(project_id, dataset_id, table_id, input_path, input_file_name,schema, add_new_records=True)
+
 
 #info_mv = extract_pipeline(user_name, max_videos)
 # df = clean_yt_data(pd.DataFrame(info_mv))
-df = save_yt_data(user_name, output_path, output_file_name, save_df, max_videos)
-print(df)
 # print(df.description.iloc[0])
 # print(type(df.published.iloc[0]))
 # print(df[['description', 'published']])

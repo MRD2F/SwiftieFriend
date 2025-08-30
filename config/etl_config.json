@@ -1,0 +1,12 @@
+{
+  "user_name": "SomeYouTubeChannel",
+  "output_path": "/opt/airflow/data/",
+  "output_file": "yt_data.csv",
+  "bigquery_table": "myproject.mydataset.youtube_data",
+  "schema": [
+    {"name": "id", "type": "STRING"},
+    {"name": "title", "type": "STRING"},
+    {"name": "published", "type": "TIMESTAMP"},
+    {"name": "description", "type": "STRING"}
+  ]
+}
