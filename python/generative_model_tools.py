@@ -1,6 +1,7 @@
 import os
 from rapidfuzz import fuzz
-import google.generativeai as gen
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 from transform import *
@@ -11,20 +12,19 @@ class GenerativeModelTools:
             get_song_match, query_collection, classify_mood,
             get_best_match_name, get_database_info]
     """
-    def __init__(self, collection_db, sentiment_generative_model="gemini-2.0-flash-001"):
+    def __init__(self, collection_db, sentiment_generative_model="gemini-1.5-flash-8b"):
         self.vectordb = collection_db.get_collection()
         self.album_songs_summary = collection_db.load_song_summary()
         self.sentiment_generative_model = sentiment_generative_model
 
         def get_google_api_key():
             load_dotenv()
-            GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+            GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY_SWIFTIE")
             if not GOOGLE_API_KEY:
                 raise ValueError("Missing GOOGLE_API_KEY in .env") 
             return GOOGLE_API_KEY
 
-        api_key = get_google_api_key()
-        gen.configure(api_key=api_key)
+        self.client = genai.Client(api_key=get_google_api_key())
 
 
     def get_database_info(self):
@@ -134,46 +134,44 @@ class GenerativeModelTools:
     def classify_mood(self, query: str) -> str:
 
         system_prompt = (
-            "You are an intelligent query router for a chatbot. "
-            "Your task is to classify user queries or song text based on the sentiment or mood expressed. "
-            "Possible categories include: 'sad', 'happy', 'melancholy', 'dance', 'revenge', 'mad', 'weepy', 'depressed', 'charmed', 'joyful', 'celebrate', 'in love', 'angry', 'joy', 'gratitude', 'serenity', 'anxiety', 'resentment', 'despair'.\n\n"
-            "Use the following rules:\n"
-            "1. Analyze the emotional tone of the text (user query or lyrics).\n"
-            "2. Select only **one or more** mood label that best captures the primaries emotional intents.\n"
-            "3. If the text expresses multiple emotions, choose the most dominant or consistent ones.\n"
-            "4. Use your understanding of natural language and human emotions to infer implicit mood where it's not obvious.\n"
-            "5. Respond with the label only — do not include explanations or extra commentary.\n\n"
-            "Examples:\n"
-            "Input: 'Why did you leave me? Everything reminds me of you.' → Output: sad, angry, melancholy \n"
-            "Input: 'I just met someone new and I can’t stop smiling!' → Output: in love, happy, joyful \n"
-            "Input: 'This beat makes me want to dance all night!' → Output: dance\n"
-            "Input: 'We’re gonna burn it all down, no mercy!' → Output: angry\n"
-            "Input: 'I won, and they all doubted me.' → Output: revenge, resentment\n"
-            "Input: 'Just got a promotion, let’s celebrate!' → Output: celebrate, dance, joyful \n"
-            "Input: 'Walking alone in the rain, thinking of old times.' → Output: melancholy, sad, anxiety, despair \n"
-        )
+        "You are an intelligent query router for a chatbot. "
+        "Your task is to classify user queries or song text based on the sentiment or mood expressed. "
+        "Possible categories include: 'sad', 'happy', 'melancholy', 'dance', 'revenge', 'mad', 'weepy', 'depressed', 'charmed', 'joyful', 'celebrate', 'in love', 'angry', 'joy', 'gratitude', 'serenity', 'anxiety', 'resentment', 'despair'.\n\n"
+        "Use the following rules:\n"
+        "1. Analyze the emotional tone of the text (user query or lyrics).\n"
+        "2. Select only **one or more** mood label that best captures the primaries emotional intents.\n"
+        "3. If the text expresses multiple emotions, choose the most dominant or consistent ones.\n"
+        "4. Use your understanding of natural language and human emotions to infer implicit mood where it's not obvious.\n"
+        "5. Respond with the label only — do not include explanations or extra commentary.\n\n"
+        "Examples:\n"
+        "Input: 'Why did you leave me? Everything reminds me of you.' → Output: sad, angry, melancholy \n"
+        "Input: 'I just met someone new and I can’t stop smiling!' → Output: in love, happy, joyful \n"
+        "Input: 'This beat makes me want to dance all night!' → Output: dance\n"
+        "Input: 'We’re gonna burn it all down, no mercy!' → Output: angry\n"
+        "Input: 'I won, and they all doubted me.' → Output: revenge, resentment\n"
+        "Input: 'Just got a promotion, let’s celebrate!' → Output: celebrate, dance, joyful \n"
+        "Input: 'Walking alone in the rain, thinking of old times.' → Output: melancholy, sad, anxiety, despair \n"
+    )
 
-        model = gen.GenerativeModel(
-                    model_name="gemini-2.0-flash-001",
-                    system_instruction=system_prompt,
-                    tools=[]
-                )
-        chat = model.start_chat(history=[], enable_automatic_function_calling=True)
+        chat = self.client.chats.create(model=self.sentiment_generative_model, 
+                            config=types.GenerateContentConfig(
+                            system_instruction=system_prompt
+                        ))
 
         response = chat.send_message(query)
         return response.text
 
-#classify_mood('I love revenge')
+    # classify_mood('oh oh I am falling in love')
     
-
-
 if __name__ == "__main__":
     collection_name = "taylor_songs_collection"
     file_summary_songs = "album_songs_summary"
     load = LoadCollectionDB(collection_name, file_summary_songs)
     tools = GenerativeModelTools(load)
+    print(tools.classify_mood('oh oh I am falling in love')
+)
     
-    print(tools.get_best_match_name('style'))
+    #print(tools.get_best_match_name('style'))
 
     #print(tools.classify_mood('I love revenge'))
     #print(tools.album_songs_summary)
