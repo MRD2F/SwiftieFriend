@@ -2,7 +2,7 @@ import json
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
   
-class LoadCollectionDB:
+class ExtractCollectionDB:
     def __init__(self, collection_name, file_summary_songs, data_path="../data/", vectordb_file_name="chroma_db"):
         self.collection_name = collection_name
         self.vectordb_file_name= vectordb_file_name
@@ -28,7 +28,7 @@ class LoadCollectionDB:
 if __name__ == "__main__":
     collection_name = "taylor_songs_collection"
     file_summary_songs = "album_songs_summary"
-    load = LoadCollectionDB(collection_name, file_summary_songs)
+    load = ExtractCollectionDB(collection_name, file_summary_songs)
     vectordb = load.get_collection()
     album_songs_summary = load.load_song_summary()
     #print(vectordb.get())

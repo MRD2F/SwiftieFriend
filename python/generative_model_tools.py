@@ -5,7 +5,6 @@ from google.genai import types
 from dotenv import load_dotenv
 
 from transform import *
-from load import LoadCollectionDB
 
 class GenerativeModelTools:
     """tools = [get_complete_lyrics, get_album_songs, 
@@ -164,6 +163,9 @@ class GenerativeModelTools:
     # classify_mood('oh oh I am falling in love')
     
 if __name__ == "__main__":
+
+    from load import LoadCollectionDB
+
     collection_name = "taylor_songs_collection"
     file_summary_songs = "album_songs_summary"
     load = LoadCollectionDB(collection_name, file_summary_songs)
