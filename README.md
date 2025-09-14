@@ -1,3 +1,15 @@
+---
+title: SwiftieFriend
+emoji: 💬
+colorFrom: yellow
+colorTo: purple
+sdk: gradio
+sdk_version: 5.0.1
+app_file: app.py
+pinned: false
+short_description: 'Swiftie Generative AI Bot '
+---
+
 # SwiftieFriend
 
 **SwiftieFriend** is a chatbot assistant dedicated exclusively to exploring and understanding **Taylor Swift's** music. Powered by the Gemini model and a comprehensive dataset containing the lyrics of all Taylor Swift albums, this assistant offers fans a unique way to interact with her songs, albums, moods, and more — all via an intuitive Gradio interface.

@@ -25,10 +25,10 @@ class ExtractCollectionDB:
             album_songs_summary = json.load(f)
         return album_songs_summary
 
-if __name__ == "__main__":
-    collection_name = "taylor_songs_collection"
-    file_summary_songs = "album_songs_summary"
-    load = ExtractCollectionDB(collection_name, file_summary_songs)
-    vectordb = load.get_collection()
-    album_songs_summary = load.load_song_summary()
-    #print(vectordb.get())
+# if __name__ == "__main__":
+#     collection_name = "taylor_songs_collection"
+#     file_summary_songs = "album_songs_summary"
+#     load = ExtractCollectionDB(collection_name, file_summary_songs)
+#     vectordb = load.get_collection()
+#     album_songs_summary = load.load_song_summary()
+#     #print(vectordb.get())

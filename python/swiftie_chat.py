@@ -9,7 +9,6 @@ class SwiftieChat:
         self.gen_tools = genrative_model_tools
         self.client = self.gen_tools.client
         self.gen_model_name = gen_model_name
-        # persistent session  
 
         with open(system_instructions, "r", encoding="utf-8") as f:
             self.system_instructions = f.read()
@@ -61,18 +60,18 @@ class SwiftieChat:
         return gradio_interface
 
 
-if __name__ == "__main__":
-    from extract_collection_db import ExtractCollectionDB
-    from generative_model_tools import GenerativeModelTools
+# if __name__ == "__main__":
+#     from extract_collection_db import ExtractCollectionDB
+#     from generative_model_tools import GenerativeModelTools
 
-    collection_name = "taylor_songs_collection"
-    file_summary_songs = "album_songs_summary"
-    collection_db = ExtractCollectionDB(collection_name, file_summary_songs)
-    tools = GenerativeModelTools(collection_db)
-    print(tools.classify_mood('oh oh I am falling in love'))
+#     collection_name = "taylor_songs_collection"
+#     file_summary_songs = "album_songs_summary"
+#     collection_db = ExtractCollectionDB(collection_name, file_summary_songs)
+#     tools = GenerativeModelTools(collection_db)
+#     print(tools.classify_mood('oh oh I am falling in love'))
           
-    swiftie_chat = SwiftieChat(tools, "../config/swiftie_chat_system_instructions.txt") 
-    response = swiftie_chat.ask_a_swiftie_with_history("Give me the lyrics to 'All Too Well',give me the most emotional part")
-    print(response)
-    s#wiftie_chat.create_gradio_interface().launch()
+#     swiftie_chat = SwiftieChat(tools, "../config/swiftie_chat_system_instructions.txt") 
+#     response = swiftie_chat.ask_a_swiftie_with_history("Give me the lyrics to 'All Too Well',give me the most emotional part")
+#     print(response)
+#     swiftie_chat.create_gradio_interface().launch()
                                

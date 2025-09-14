@@ -162,16 +162,16 @@ class GenerativeModelTools:
 
     # classify_mood('oh oh I am falling in love')
     
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    from load import LoadCollectionDB
+#     from load import LoadCollectionDB
 
-    collection_name = "taylor_songs_collection"
-    file_summary_songs = "album_songs_summary"
-    load = LoadCollectionDB(collection_name, file_summary_songs)
-    tools = GenerativeModelTools(load)
-    print(tools.classify_mood('oh oh I am falling in love')
-)
+#     collection_name = "taylor_songs_collection"
+#     file_summary_songs = "album_songs_summary"
+#     load = LoadCollectionDB(collection_name, file_summary_songs)
+#     tools = GenerativeModelTools(load)
+#     print(tools.classify_mood('oh oh I am falling in love')
+# )
     
     #print(tools.get_best_match_name('style'))
 

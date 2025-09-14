@@ -2,17 +2,15 @@ from extract_collection_db  import ExtractCollectionDB
 from transform import *
 from generative_model_tools import GenerativeModelTools
 from swiftie_chat import SwiftieChat
+#from IPython.display import Markdown, display
 
-from IPython.display import Markdown, display
+"""Extract → ExtractCollectionDB class that retrieves the embeddings from the Chroma vector DB ✅
 
+Transform → Feed the processed data into the GenerativeModelTools class with methods that performs RAG operations (embedding the text, storing vectors, retrieving context for LLM). ✅
+            Cleaning the dataset (normalize text, remove duplicates, etc.). ✅
 
-"""Extract → Several classes that query a local database. ✅
-
-Transform → Cleaning the dataset (normalize text, remove duplicates, etc.). ✅
-
-Load → Feed the processed data into a script that performs RAG operations (embedding the text, storing vectors, retrieving context for LLM). ✅
-
-This is a classic ETL pattern but instead of ending in a database or BI system, your “load” step feeds into a vector store or RAG pipeline, which is still consistent with the concept.
+Load → Create a chatbot using goole genai API, and defining an interface using the Gradio library. 
+       The information from the retrived methods are loading into the chatbot instructions to be used by the LLM. ✅
 """
 class ETLSwiftieChatPipeline:
     def __init__(self, collection_name, file_summary_songs, swiftie_chat_instructions, data_path="../data/", vectordb_file_name="chroma_db"):
@@ -22,7 +20,6 @@ class ETLSwiftieChatPipeline:
         self.genrative_model_tools = GenerativeModelTools(self.collection_db)
         self.swiftie_chat = SwiftieChat(self.genrative_model_tools, swiftie_chat_instructions)
  
-
     def get_gradio_interface(self):
         gradio_interface = self.swiftie_chat.create_gradio_interface()
         return gradio_interface
@@ -48,4 +45,4 @@ if __name__ == "__main__":
     etl_assistant_pipeline = ETLSwiftieChatPipeline(collection_name, file_summary_songs, swiftie_chat_instructions)
     #print(etl_assistant_pipeline.ask_a_swiftie_with_history("Give me the lyrics to 'All Too Well',give me the most emotional part"))
     #print(etl_assistant_pipeline.classify_mood('oh oh I am falling in love'))
-    etl_assistant_pipeline.lauch_gradio_interface(share=True)
+    #etl_assistant_pipeline.lauch_gradio_interface(share=True)
