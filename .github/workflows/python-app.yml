@@ -16,6 +16,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_API_KEY_SWIFTIE: ${{ secrets.GOOGLE_API_KEY_SWIFTIE }}
 
     steps:
     - uses: actions/checkout@v3
