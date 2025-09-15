@@ -4,7 +4,7 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
-from .transform import normalize_lyrics, clean_text, remove_symbols, split_by_capitals, space_song_names
+from .transform import split_by_capitals, space_song_names
 
 class GenerativeModelTools:
     """tools = [get_complete_lyrics, get_album_songs, 
