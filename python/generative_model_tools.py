@@ -4,7 +4,7 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
-from transform import *
+from .transform import *
 
 class GenerativeModelTools:
     """tools = [get_complete_lyrics, get_album_songs, 

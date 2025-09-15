@@ -1,7 +1,7 @@
-from extract_collection_db  import ExtractCollectionDB
-from transform import *
-from generative_model_tools import GenerativeModelTools
-from swiftie_chat import SwiftieChat
+from .extract_collection_db  import ExtractCollectionDB
+from .transform import *
+from .generative_model_tools import GenerativeModelTools
+from .swiftie_chat import SwiftieChat
 #from IPython.display import Markdown, display
 
 """Extract → ExtractCollectionDB class that retrieves the embeddings from the Chroma vector DB ✅
