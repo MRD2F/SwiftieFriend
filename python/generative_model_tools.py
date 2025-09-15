@@ -20,7 +20,7 @@ class GenerativeModelTools:
             load_dotenv()
             GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY_SWIFTIE")
             if not GOOGLE_API_KEY:
-                raise ValueError("Missing GOOGLE_API_KEY in .env") 
+                raise ValueError("Missing GOOGLE_API_KEY_SWIFTIE in .env") 
             return GOOGLE_API_KEY
 
         self.client = genai.Client(api_key=get_google_api_key())
