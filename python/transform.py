@@ -23,7 +23,7 @@ def remove_symbols(s):
 def split_by_capitals(s):
     # Creates keyword list with the words
     s = remove_symbols(s)
-    n_cap_letters = len(s)
+    #n_cap_letters = len(s)
     keywords = [i.lower() for i in re.findall(r'[A-Z][^A-Z]*', s)]
     if (len(keywords) == 1):
         return keywords

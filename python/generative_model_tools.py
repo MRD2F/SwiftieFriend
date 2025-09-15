@@ -4,7 +4,7 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
-from .transform import *
+from transform import normalize_lyrics, clean_text, remove_symbols, split_by_capitals, space_song_names
 
 class GenerativeModelTools:
     """tools = [get_complete_lyrics, get_album_songs, 
@@ -116,19 +116,6 @@ class GenerativeModelTools:
             return results['documents']
         else:
             return results
-    
-    def get_best_match_name(self, name : str, threshold : int = 87) -> list:
-        song_name = space_song_names(name)
-        matches=[]
-        song_album={}
-        for album, stored_songs in self.album_songs_summary.items():
-            for stored_song in stored_songs:
-                stored_song_spaced = space_song_names(stored_song)
-                score = fuzz.partial_ratio(song_name, stored_song_spaced)
-                if score >= threshold:
-                    matches.append(stored_song)
-                    song_album[stored_song] = album
-        return matches, song_album
 
     def classify_mood(self, query: str) -> str:
 
